@@ -2,6 +2,7 @@ package zoho
 
 import (
 	"encoding/json"
+	"net/http"
 )
 
 type account struct {
@@ -24,4 +25,17 @@ func (r *response) toAccount() (result []account) {
 	}
 
 	return result
+}
+
+func (z *Zoho) setAccountID() error {
+	resp, err := request("/accounts", http.MethodGet, parameters{
+		"token": z.token.AccessToken,
+	})
+	if err != nil {
+		return err
+	}
+
+	z.accountID = resp.toAccount()[0].AccountID
+
+	return nil
 }

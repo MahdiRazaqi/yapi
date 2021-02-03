@@ -8,7 +8,7 @@ import (
 // SendMail send email with zoho mail
 func (z *Zoho) SendMail(from, to, subject, content string) error {
 	params := parameters{
-		"token":       z.Token.AccessToken,
+		"token":       z.token.AccessToken,
 		"fromAddress": from,
 		"toAddress":   to,
 		"subject":     subject,
@@ -16,7 +16,7 @@ func (z *Zoho) SendMail(from, to, subject, content string) error {
 		"askReceipt":  "yes",
 	}
 
-	path := fmt.Sprintf("/accounts/%v/messages", z.AccountID)
+	path := fmt.Sprintf("/accounts/%v/messages", z.accountID)
 
 	_, err := request(path, http.MethodPost, params)
 	return err
