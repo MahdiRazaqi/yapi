@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"golang.org/x/oauth2"
 )
@@ -73,4 +74,20 @@ func (c *Config) SetToken(t *oauth2.Token) (*Zoho, error) {
 	}
 
 	return z, nil
+}
+
+// RenewToken renew token
+func (z *Zoho) RenewToken() error {
+	if z.token.Expiry.Before(time.Now()) {
+		src := z.Config.conf.TokenSource(oauth2.NoContext, z.token)
+
+		t, err := oauth2.ReuseTokenSource(z.token, src).Token()
+		if err != nil {
+			return err
+		}
+
+		z.token = t
+	}
+
+	return nil
 }
